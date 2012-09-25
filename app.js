@@ -5,7 +5,7 @@ var connect = require('connect'),
 var app = connect()
   .use(connect.favicon())
   .use(connect.logger('dev'))
-  .use(connect.static('public'))
+  .use(connect['static']('public'))
   .use(connect.directory('public'))
   .use(function(req, res){
     res.end('Hello from Connect!\n');
@@ -34,7 +34,6 @@ ioApp
 		});
 	});
 
+server.listen("http://markle976.realist.jit.su");
 
 
-
-server.listen(3000, "192.168.43.109");
