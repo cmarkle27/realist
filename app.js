@@ -28,7 +28,6 @@ ioApp
 	.of('/addText')
 	.on('connection', function(socket) {
 
-    // loop over messages array
     messages.forEach(function(message) {
       socket.emit('msg received', message.user, message.text, message.checked, message.id);
     });
@@ -42,18 +41,15 @@ ioApp
 		});
 
     socket.on('check', function(data) {
-      console.log(data);
       messages.forEach(function(message, index) {
-        console.log(message.id);
         if (message.id == data.id) { // and user
-          messages[index].checked = data.checked; // mmm.. we need to replace this message in the messages array!!!
-
+          messages[index].checked = data.checked;
         }
       });
     });
 
 	});
 
-server.listen(8000, "192.168.1.113");
+server.listen("http://markle976.realist.jit.su");
 
 
