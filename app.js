@@ -1,6 +1,6 @@
-var connect = require('connect'),
-	http = require('http'),
-	io = require('socket.io');
+var connect = require('connect');
+var http = require('http');
+var io = require('socket.io');
 
 var app = connect()
   .use(connect.favicon())
@@ -13,27 +13,34 @@ var app = connect()
 
 var server = http.createServer(app);
 
-/*server.use('/',
-    connect.router(function(app) {
-        app.get('', handleGet);
-        //app.post('', handlePost);
-    })
-);*/
-
 // Listen for Socket.IO events
 var ioApp = io.listen(server);
+
+var messages = [];
+
+var saveMessage = function(data) {
+  messages.push(data);
+};
 
 ioApp
 	.of('/addText')
 	.on('connection', function(socket) {
+
+    // loop over messages array
+    messages.forEach(function(message) {
+      console.dir(message);
+      socket.emit('msg received', message.user, message.text);
+    });
+
 		socket.on('add text', function(data) {
-			console.log(data.user + ": " + data.text);
-      //sahkdf aksdh akds
+
+      saveMessage(data);
 			socket.broadcast.emit('msg received', data.user, data.text);
 			socket.emit('msg received', data.user, data.text);
 		});
+
 	});
 
-server.listen("http://markle976.realist.jit.su");
+server.listen(8000, "192.168.1.116");
 
 

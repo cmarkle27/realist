@@ -38,6 +38,9 @@
 				padding-right: 66px;
 				padding-bottom: 11px;
 			}
+			.status {
+				cursor: pointer;
+			}
 			#newUserText {
 				height: auto;
 				margin: 0;
@@ -71,29 +74,54 @@
             </table>
 
         </div>
-		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js'></script>
-		<script type='text/javascript' src="/socket.io/socket.io.js"></script>
-		<script type='text/javascript'>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
 
 			// Globals
 			var userName = "chris";
 			var num = 0;
 
-			var socketMsg = io.connect('/addText');
+			var socketMsg = io.connect("/addText");
 
-			socketMsg.on('msg received', function(user, newText) {
-				//var name = $('<b></b>');
-				//name.text(user + ': ');
+			socketMsg.on("msg received", function(user, newText) {
+				//var name = $("<b></b>");
+				//name.text(user + ": ");
 				num += 1;
-				$("#list").append("<tr><td>"+num+"</td><td>"+newText+"</td><td>&#10066;</td></tr>");
+				$("#list").append("<tr><td>"+num+"</td><td>"+newText+"</td><td class=status>&#10066;</td></tr>");
 			});
 
 
 
-			$('#sendButton').click(function() {
-				socketMsg.emit('add text', {'user':userName, 'text':$('#newUserText').val()});
-				$('#newUserText').val('');
+			$("#sendButton").click(function() {
+				socketMsg.emit("add text", {"user":userName, "text":$("#newUserText").val()});
+				$("#newUserText").val("");
 			});
+
+			$("#newUserText").on("keydown", function(e) {
+				// Trigger save edited status on pressing return
+				if (e.keyCode == 13) {
+					$("#sendButton").click();
+					return false;
+				}
+				return true;
+			});
+
+			$("#list").on("click", ".status", function() {
+				console.log("d");
+				var $_this = $(this);
+				if ($_this.hasClass("checked")) {
+					$_this.removeClass("checked");
+					$_this.html("&#10066;");
+					// emit
+				} else {
+					$_this.addClass("checked");
+					$_this.html("&#10003;");
+					// emit
+				}
+			});
+
+
 
 		</script>
 	</body>
