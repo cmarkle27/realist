@@ -42,10 +42,11 @@ ioApp
 		});
 
     socket.on('check', function(data) {
-      console.log('checking...');
-      messages.forEach(function(message) {
-        if (message.id === data.id) { // and user
-          message.checked = data.checked; // mmm.. we need to replace this message in the messages array!!!
+      console.log(data);
+      messages.forEach(function(message, index) {
+        console.log(message.id);
+        if (message.id == data.id) { // and user
+          messages[index].checked = data.checked; // mmm.. we need to replace this message in the messages array!!!
 
         }
       });

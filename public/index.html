@@ -111,11 +111,11 @@
 				if ($_this.hasClass("checked")) {
 					$_this.removeClass("checked");
 					$_this.html("&#10066;");
-					socketMsg.emit("check", {"user":userName, "item":$_this.closest("tr").data("id"), "checked":false });
+					socketMsg.emit("check", {"user":userName, "id":$_this.closest("tr").data("id"), "checked":false });
 				} else {
 					$_this.addClass("checked");
 					$_this.html("&#10003;");
-					socketMsg.emit("check", {"user":userName, "item":$_this.closest("tr").data("id"), "checked":true });
+					socketMsg.emit("check", {"user":userName, "id":$_this.closest("tr").data("id"), "checked":true });
 				}
 			});
 
