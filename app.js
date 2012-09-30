@@ -17,8 +17,10 @@ var server = http.createServer(app);
 var ioApp = io.listen(server);
 
 var messages = [];
+var id = 0;
 
 var saveMessage = function(data) {
+  console.log(data);
   messages.push(data);
 };
 
@@ -28,19 +30,29 @@ ioApp
 
     // loop over messages array
     messages.forEach(function(message) {
-      console.dir(message);
-      socket.emit('msg received', message.user, message.text);
+      socket.emit('msg received', message.user, message.text, message.checked, message.id);
     });
 
 		socket.on('add text', function(data) {
-
+      id += 1;
+      data.id = id;
       saveMessage(data);
-			socket.broadcast.emit('msg received', data.user, data.text);
-			socket.emit('msg received', data.user, data.text);
+			socket.broadcast.emit('msg received', data.user, data.text, data.checked, data.id);
+			socket.emit('msg received', data.user, data.text, data.checked, data.id);
 		});
+
+    socket.on('check', function(data) {
+      console.log('checking...');
+      messages.forEach(function(message) {
+        if (message.id === data.id) { // and user
+          message.checked = data.checked; // mmm.. we need to replace this message in the messages array!!!
+
+        }
+      });
+    });
 
 	});
 
-server.listen(8000, "192.168.1.116");
+server.listen(8000, "192.168.1.113");
 
 
