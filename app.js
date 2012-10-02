@@ -11,39 +11,37 @@ var app = connect()
     res.end('Hello from Connect!\n');
   });
 
-var server = http.createServer(app);
-
-// Listen for Socket.IO events
-var ioApp = io.listen(server);
-
-var messages = [];
+var items = [];
 var id = 0;
 
 var saveMessage = function(data) {
-  console.log(data);
-  messages.push(data);
+  id += 1;
+  data.id = id;
+  items.push(data);
+  console.dir(data);
 };
 
+var server = http.createServer(app);
+var ioApp = io.listen(server);
+
 ioApp
-	.of('/addText')
+	.of('/realist')
 	.on('connection', function(socket) {
 
-    messages.forEach(function(message) {
-      socket.emit('msg received', message.user, message.text, message.checked, message.id);
+    items.forEach(function(message) {
+      socket.emit('item added', message.user, message.text, message.checked, message.id);
     });
 
-		socket.on('add text', function(data) {
-      id += 1;
-      data.id = id;
+		socket.on('add item', function(data) {
       saveMessage(data);
-			socket.broadcast.emit('msg received', data.user, data.text, data.checked, data.id);
-			socket.emit('msg received', data.user, data.text, data.checked, data.id);
+			socket.broadcast.emit('item added', data.user, data.text, data.checked, data.id);
+			socket.emit('item added', data.user, data.text, data.checked, data.id);
 		});
 
-    socket.on('check', function(data) {
-      messages.forEach(function(message, index) {
-        if (message.id == data.id) { // and user
-          messages[index].checked = data.checked;
+    socket.on('check item', function(data) {
+      Object.keys(items).forEach(function(key) {
+        if (items[key].id === data.id) { // and user
+          items[key].checked = data.checked;
         }
       });
     });

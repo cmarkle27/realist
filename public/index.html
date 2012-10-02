@@ -1,123 +1,36 @@
+<!DOCTYPE html>
 <html>
+
   <head>
     <title>List</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <style type="text/css">
-      body {
-        background: #2b2b2b;
-        color: #666;
-        padding: 10px;
-      }
-      .wrapper {
-        max-width: 480px;
-      }
-      .listTable {
-        background: #fff;
-        width: 100%;
-        border-radius: 4px;
-      }
-      .listTable td, th {
-        line-height: 2;
-      }
-      .listTable td {
-        border-top: solid 1px #ddd;
-      }
-      th:first-child, th:last-child, td:first-child, td:last-child {
-        text-align: center;
-        width: 32px;
-      }
-      .listItem {
-        text-align: left;
-      }
-      .listCheck {
-        text-align: left;
-      }
-      .addLine {
-        position: relative;
-        padding-right: 66px;
-        padding-bottom: 11px;
-      }
-      .status {
-        cursor: pointer;
-      }
-      #newUserText {
-        height: auto;
-        margin: 0;
-        width: 100%
-      }
-      #sendButton {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="./socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/realist.js"></script>
   </head>
+
   <body>
     <div class="wrapper">
 
       <div class="addLine">
-        <input type="text" placeholder="Type something..." id="newUserText">
+        <input type="text" name="itemText" placeholder="Type something..." id="itemText">
         <button type="submit" class="btn" id="sendButton">Add</button>
       </div>
 
       <table class="listTable">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Item</th>
-                  <th>&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody id="list">
-              </tbody>
-            </table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody id="list"></tbody>
+      </table>
 
-        </div>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-
-      // Globals
-      var userName = "chris";
-      var num = 0;
-
-      var socketMsg = io.connect("/addText");
-
-      socketMsg.on("msg received", function(user, newText, checked, id) {
-        var checkClass = (checked) ? "status checked" : "status";
-        var checkIcon = (checked) ? "&#10003;" : "&#10066;";
-        num += 1;
-        $("#list").append("<tr data-id="+id+"><td>"+num+"</td><td>"+newText+"</td><td class="+checkClass+">"+checkIcon+"</td></tr>");
-      });
-
-      $("#sendButton").click(function() {
-        socketMsg.emit("add text", { "user":userName, "text":$("#newUserText").val(), "checked":false });
-        $("#newUserText").val("");
-      });
-
-      $("#newUserText").on("keydown", function(e) {
-        if (e.keyCode == 13) {
-          $("#sendButton").click();
-          return false;
-        }
-        return true;
-      });
-
-      $("#list").on("click", ".status", function() {
-        console.log("d");
-        var $_this = $(this);
-        if ($_this.hasClass("checked")) {
-          $_this.removeClass("checked");
-          $_this.html("&#10066;");
-          socketMsg.emit("check", {"user":userName, "id":$_this.closest("tr").data("id"), "checked":false });
-        } else {
-          $_this.addClass("checked");
-          $_this.html("&#10003;");
-          socketMsg.emit("check", {"user":userName, "id":$_this.closest("tr").data("id"), "checked":true });
-        }
-      });
-
-    </script>
+    </div>
   </body>
+
 </html>
