@@ -1,6 +1,8 @@
 var connect = require('connect');
 var http = require('http');
 var io = require('socket.io');
+var fs = require('fs');
+var nconf = require('nconf');
 
 var app = connect()
   .use(connect.favicon())
@@ -23,6 +25,10 @@ var saveMessage = function(data) {
 
 var server = http.createServer(app);
 var ioApp = io.listen(server);
+
+nconf
+  .argv()
+  .file({file:'./config.json'});
 
 ioApp
 	.of('/realist')
@@ -48,6 +54,5 @@ ioApp
 
 	});
 
-server.listen("http://markle976.realist.jit.su");
-
-
+server.listen(nconf.get("port"), nconf.get("address"));
+console.log("server started at:", nconf.get("address") + ":" + nconf.get("port"));
