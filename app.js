@@ -53,6 +53,9 @@ ioApp
     });
 
 	});
-
-server.listen(nconf.get("port"), nconf.get("address"));
+if (nconf.get("port") === "") {
+  server.listen(nconf.get("address"));
+} else {
+  server.listen(nconf.get("port"), nconf.get("address"));
+}
 console.log("server started at:", nconf.get("address") + ":" + nconf.get("port"));
