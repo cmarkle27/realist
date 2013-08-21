@@ -1,0 +1,16 @@
+{
+  "name": "realist",
+  "subdomain": "markle976.realist",
+  "scripts": {
+    "start": "app.js"
+  },
+  "version": "0.0.0-9",
+  "engines": {
+    "node": "0.8.x"
+  },
+  "dependencies": {
+    "connect": "2.4.x",
+    "socket.io": "0.9.x",
+    "nconf": "~0.6.7"
+  }
+}

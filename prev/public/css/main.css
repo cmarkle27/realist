@@ -1,0 +1,47 @@
+body {
+  background: #2b2b2b;
+  color: #666;
+  padding: 10px;
+}
+.wrapper {
+  max-width: 480px;
+}
+.listTable {
+  background: #fff;
+  width: 100%;
+  border-radius: 4px;
+}
+.listTable td, th {
+  line-height: 2;
+}
+.listTable td {
+  border-top: solid 1px #ddd;
+}
+th:first-child, th:last-child, td:first-child, td:last-child {
+  text-align: center;
+  width: 32px;
+}
+.listItem {
+  text-align: left;
+}
+.listCheck {
+  text-align: left;
+}
+.addLine {
+  position: relative;
+  padding-right: 16px;
+  padding-bottom: 11px;
+}
+.status {
+  cursor: pointer;
+}
+#itemText {
+  height: auto;
+  margin: 0;
+  width: 100%
+}
+#sendButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

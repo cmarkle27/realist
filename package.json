@@ -1,16 +1,27 @@
 {
   "name": "realist",
-  "subdomain": "markle976.realist",
+  "version": "0.0.1",
+  "description": "A realtime updating shopping list written in socket.io",
+  "main": "server.js",
   "scripts": {
-    "start": "app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "0.0.0-9",
-  "engines": {
-    "node": "0.8.x"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markle976/realist.git"
+  },
+  "keywords": [
+    "realtime"
+  ],
+  "author": "Chris Markle",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "4a7254d9027107972c893073b8a8b63ffcd02133",
+  "bugs": {
+    "url": "https://github.com/markle976/realist/issues"
   },
   "dependencies": {
-    "connect": "2.4.x",
-    "socket.io": "0.9.x",
-    "nconf": "~0.6.7"
+    "express": "~3.3.5",
+    "mongoose": "~3.6.17"
   }
 }
