@@ -1,28 +1,20 @@
-<!DOCTYPE html>
-<html>
+<% include header.html %>
 
-  <head>
-    <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-<!--     // <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
-    // <script type="text/javascript" src="./socket.io/socket.io.js"></script>
-    // <script type="text/javascript" src="js/realist.js"></script> -->
-  </head>
-
-  <body>
     <div class="wrapper">
 
       <div class="loginForm">
-      <form action="login" method="post">
-        <input type="text" name="username" id="username">
+      <% if (hasError) { %>
+      <span class="error">Invalid Login</span>
+      <% } %>
+      <form action="" method="post">
+        <label for="username">Username:</label>
+        <input type="text" name="username">
+        <label for="password">Password:</label>
         <input type="password" name="password">
         <button type="submit" class="btn">Login</button>
       </form>
       </div>
 
     </div>
-  </body>
 
-</html>
+<% include footer.html %>
