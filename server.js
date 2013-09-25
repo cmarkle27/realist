@@ -53,12 +53,20 @@ app.post('/login/:error?', function(req, res) {
 });
 
 // route with restrict middleware
-app.get('/', restrict, function(req,res) {
-	console.log(req.session.user);
-	res.render('index', {
-	    title: "EJS example",
-	    header: "Some users"
+// add list items to template
+
+//app.get('/', restrict, function(req,res) {
+app.get('/', function(req,res) {
+
+	// try?
+	db.Grocery.find(function(err, groceries) {
+	  if (err) console.log(err);
+		res.render('index', {
+		    title: "List",
+		    groceries: groceries
+		});
 	});
+
 });
 
 // start server

@@ -10,12 +10,20 @@
       <table class="listTable">
         <thead>
           <tr>
-            <th>#</th>
             <th>Item</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
-        <tbody id="list"></tbody>
+        <tbody id="list">
+          <% groceries.forEach(function(grocery){ %>
+            <% var checkClass = (grocery.checked) ? "status checked" : "status"; %>
+            <% var checkIcon = (grocery.checked) ? "&#10003;" : "&#10066;"; %>
+            <tr data-id="<%=grocery._id%>">
+              <td><%=grocery.title%></td>
+              <td class="<%=checkClass%>"><%-checkIcon%></td>
+            </tr>
+          <% }) %>
+        </tbody>
       </table>
 
     </div>
