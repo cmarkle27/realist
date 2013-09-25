@@ -23,7 +23,6 @@
   "dependencies": {
     "express": "~3.3.5",
     "mongoose": "~3.6.17",
-    "ejs": "~0.8.4",
     "pwd": "~0.0.2"
   }
 }
