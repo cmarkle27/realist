@@ -8,8 +8,8 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: 'KJDNJ24SJFHDK433'}));
 app.use(express.static(path.join(__dirname, 'public')));
-app.engine('.html', require('ejs').__express);
-app.set('view engine', 'html');
+//app.engine('.html', require('ejs').__express);
+//app.set('view engine', 'html');
 
 function authenticate(name, pass, fn) {
   db.User.findOne({username: name}, function(err, user) {
