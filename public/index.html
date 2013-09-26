@@ -1,35 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="realistApp">
 <head>
   <meta charset="utf-8">
   <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <script type="text/javascript" src="/bower/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/bower/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="/js/realistApp.js"></script>
+    <script type="text/javascript" src="/js/realistApp.controllers.js"></script>
     <!-- // <script type="text/javascript" src="./socket.io/socket.io.js"></script> -->
-    <!-- // <script type="text/javascript" src="js/realist.js"></script> -->
 </head>
 <body>
-    <div class="wrapper">
+  <div class="wrapper" ng-controller="ListController">
 
-      <div class="addLine">
-        <input type="text" name="itemText" placeholder="Type something..." id="itemText">
-        <button type="submit" class="btn" id="sendButton">Add</button>
-      </div>
-
-      <table class="listTable">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody id="list">
-
-        </tbody>
-      </table>
-
+    <div class="addLine">
+      <form ng-submit="addItem()">
+        <input type="text" ng-model="todoText" placeholder="Type something..." id="itemText">
+        <input type="submit" class="btn" id="sendButton" value="Add">
+      </form>
     </div>
+
+    <ul class="listTable">
+      <li ng-repeat="item in items">
+        {{item.text}} <input id="checkSlave" type="checkbox" ng-checked="item.done">
+      </li>
+    </ul>
+
+  </div>
 
 </body>
 </html>
