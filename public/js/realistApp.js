@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 var Realist = angular.module('realistApp', ['ui.bootstrap']);
   // .config(['$routeProvider', function($routeProvider) {
@@ -20,6 +20,7 @@ Realist.controller('ListController',['$scope', function($scope) {
   $scope.addItem = function() {
     $scope.items.push({text:$scope.todoText, done:false});
     $scope.todoText = '';
+    console.log($scope.items);
   };  
 
 }]);

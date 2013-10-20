@@ -3,13 +3,15 @@ var app = express();
 var path = require('path');
 var pwd = require('pwd');
 var db = require('./lib/db');
+var fs = require('fs');
+var _index = fs.readFileSync(__dirname + '/views/index.html', 'utf8');
 
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: 'KJDNJ24SJFHDK433'}));
 app.use(express.static(path.join(__dirname, 'public')));
-//app.engine('.html', require('ejs').__express);
-//app.set('view engine', 'html');
+// app.engine('.html', require('ejs').__express);
+// app.set('view engine', 'html');
 
 function authenticate(name, pass, fn) {
   db.User.findOne({username: name}, function(err, user) {
@@ -34,8 +36,8 @@ function restrict(req, res, next) {
 // routes
 app.get('/login/:error?', function(req,res) {
 	res.render('login', {
-	    title: "Login",
-	    hasError: req.params.error
+      title: "Login",
+      hasError: req.params.error
 	});
 });
 
@@ -55,17 +57,20 @@ app.post('/login/:error?', function(req, res) {
 // route with restrict middleware
 // add list items to template
 
-//app.get('/', restrict, function(req,res) {
+// app.get('/', restrict, function(req,res) {
 app.get('/', function(req,res) {
 
-	// try?
-	db.Grocery.find(function(err, groceries) {
-	  if (err) console.log(err);
-		res.render('index', {
-		    title: "List",
-		    groceries: groceries
-		});
-	});
+    res.set('Content-Type', 'text/html');
+    res.send(_index);
+
+  // try?
+  // db.Grocery.find(function(err, groceries) {
+  //   if (err) console.log(err);
+  //   res.render('index', {
+  //     title: "List",
+  //     groceries: groceries
+  //   });
+  // });
 
 });
 
