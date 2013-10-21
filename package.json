@@ -23,6 +23,7 @@
   "dependencies": {
     "express": "~3.3.5",
     "mongoose": "~3.6.17",
-    "pwd": "~0.0.2"
+    "pwd": "~0.0.2",
+    "socket.io": "~0.9.16"
   }
 }
