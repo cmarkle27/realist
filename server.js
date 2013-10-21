@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var io = require('socket.io');
 var path = require('path');
 var pwd = require('pwd');
 var db = require('./lib/db');
@@ -10,8 +11,8 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: 'KJDNJ24SJFHDK433'}));
 app.use(express.static(path.join(__dirname, 'public')));
-// app.engine('.html', require('ejs').__express);
-// app.set('view engine', 'html');
+app.engine('.html', require('ejs').__express);
+app.set('view engine', 'html');
 
 function authenticate(name, pass, fn) {
   db.User.findOne({username: name}, function(err, user) {
@@ -32,6 +33,17 @@ function restrict(req, res, next) {
     res.redirect('/login');
   }
 }
+
+var _ioServer = io.listen(app.listen(process.env.PORT || 8080));
+
+_ioServer.sockets.on('connection', function (socket) {
+  console.log("addada");
+  socket.emit('message', { message: 'welcome to the chat' });
+  socket.on('send', function (data) {
+      _ioServer.sockets.emit('message', data);
+  });
+});
+
 
 // routes
 app.get('/login/:error?', function(req,res) {
@@ -57,7 +69,25 @@ app.post('/login/:error?', function(req, res) {
 // route with restrict middleware
 // add list items to template
 
-// app.get('/', restrict, function(req,res) {
+// app.get('/list/:id', restrict, function(req,res) {
+app.get('/list/:id', function(req, res) {
+
+  var list_id = req.params.id;
+
+  // console.log(req.session.user._id);
+  console.log(list_id);
+
+  res.set('Content-Type', 'text/html');
+  res.send(_index);
+
+  // try?
+  db.Grocery.find({user: list_id}, function(err, groceries) {
+    if (err) console.log(err);
+    console.log(groceries);
+  });
+
+});
+
 app.get('/', function(req,res) {
 
     res.set('Content-Type', 'text/html');
@@ -75,4 +105,4 @@ app.get('/', function(req,res) {
 });
 
 // start server
-app.listen(process.env.PORT || 8080);
+// app.listen(process.env.PORT || 8080);
