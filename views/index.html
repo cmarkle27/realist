@@ -18,14 +18,14 @@
 
     <div class="addLine">
       <form ng-submit="addItem()">
-        <input type="text" ng-model="todoText" placeholder="Type something..." id="itemText">
+        <input type="text" ng-model="itemText" placeholder="Type something..." id="itemText">
         <input type="submit" class="btn" id="sendButton" value="Add">
       </form>
     </div>
 
     <ul class="listTable">
       <li ng-repeat="item in items">
-        {{item.text}} <input id="checkSlave" type="checkbox" ng-checked="item.done">
+        {{item.title}} <input id="checkSlave" type="checkbox" ng-checked="item.checked">
       </li>
     </ul>
 

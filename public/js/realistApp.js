@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 var RealistApp = angular.module('realistApp', [
   'ui.bootstrap',
@@ -17,24 +17,39 @@ var RealistApp = angular.module('realistApp', [
   var RealistControllers = angular.module('realistApp.controllers', []);
   RealistControllers.controller('ListController', function($scope, socket) {
 
-    socket.on('send:name', function (data) {
-      $scope.name = data.name;
+    $scope.items = [];
+    $scope.user = '0'; // user should be group instead
+
+    socket.on("items loaded", function(groceries) {
+      var items = [];
+      groceries.forEach(function(grocery) {
+        items.push({
+          "title" : grocery.title,
+          "checked" : grocery.checked
+        });
+      });
+      $scope.items = items;
     });
 
-    $scope.items = [
-      {text:'feed1', done:true},
-      {text:'feed2', done:true},
-      {text:'other feed', done:true},
-      {text:'more feed', done:true},
-      {text:'another feed', done:false}
-    ];
+    socket.on("item saved", function(grocery) {
+      console.log("new item saved");
+      $scope.items.push({
+        "title" : grocery.title,
+        "checked" : grocery.checked
+      });
+    });    
 
     $scope.addItem = function() {
-      $scope.items.push({text:$scope.todoText, done:false});
-      $scope.todoText = '';
-      console.log($scope.items);
-    }; 
-    
+      var item = {
+        "title" : $scope.itemText,
+        "checked" : false
+      };
+      $scope.items.push(item);
+      $scope.itemText = '';
+      console.log(item);
+      socket.emit('item added', item);
+    };
+
   });
 
 })();
@@ -47,7 +62,7 @@ var RealistApp = angular.module('realistApp', [
     var socket = io.connect();
     return {
       on: function(eventName, callback) {
-        socket.on(eventName, function() {  
+        socket.on(eventName, function() {
           var args = arguments;
           $rootScope.$apply(function() {
             callback.apply(socket, args);
@@ -62,9 +77,9 @@ var RealistApp = angular.module('realistApp', [
               callback.apply(socket, args);
             }
           });
-        })
+        });
       }
     };
-  });  
+  });
 
 })();

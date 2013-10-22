@@ -36,15 +36,6 @@ function restrict(req, res, next) {
 
 var _ioServer = io.listen(app.listen(process.env.PORT || 8080));
 
-_ioServer.sockets.on('connection', function (socket) {
-  console.log("addada");
-  socket.emit('message', { message: 'welcome to the chat' });
-  socket.on('send', function (data) {
-      _ioServer.sockets.emit('message', data);
-  });
-});
-
-
 // routes
 app.get('/login/:error?', function(req,res) {
 	res.render('login', {
@@ -66,25 +57,58 @@ app.post('/login/:error?', function(req, res) {
   });
 });
 
-// route with restrict middleware
-// add list items to template
-
-// app.get('/list/:id', restrict, function(req,res) {
-app.get('/list/:id', function(req, res) {
+app.get('/list/:id', restrict, function(req,res) {
+// app.get('/list/:id', function(req, res) {
 
   var list_id = req.params.id;
 
   // console.log(req.session.user._id);
-  console.log(list_id);
+  //console.log(list_id);
 
   res.set('Content-Type', 'text/html');
   res.send(_index);
 
-  // try?
-  db.Grocery.find({user: list_id}, function(err, groceries) {
-    if (err) console.log(err);
-    console.log(groceries);
+  // sawkets
+  _ioServer.sockets.on('connection', function(socket) {
+
+    // this should be list instead of user!!!
+    db.Grocery.find({user: list_id}, function(err, groceries) {
+      if (err) console.log(err);
+      console.log(groceries);
+      socket.emit('items loaded', groceries);
+    });
+    
+    // socket.emit('message', { message: 'welcome to the chat' });
+    // socket.on('send', function (data) {
+    //     _ioServer.sockets.emit('message', data);
+    // });
+
+    socket.on('item added', function(data) {
+
+      console.log("\n ------------------------------------------------- \n item added: ", data);
+
+      var item = new db.Grocery();
+      item.user = list_id;
+      item.title = data.title;
+      item.checked = data.checked;
+
+      item.save(function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("item saved");
+        }
+      });
+
+      // tell everyone else about our change
+      socket.broadcast.emit('item saved', data);
+
+    });
+
   });
+
+
+
 
 });
 
