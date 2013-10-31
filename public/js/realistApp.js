@@ -24,11 +24,10 @@ var RealistApp = angular.module('realistApp', [
       $scope.items = list.items;
     });
 
-    socket.on("item saved", function(grocery) {
-      console.log("new item saved");
+    socket.on("item saved", function(item) {
       $scope.items.push({
-        "name" : grocery.name,
-        "is_checked" : grocery.is_checked
+        "name" : item.name,
+        "is_checked" : item.is_checked
       });
     });    
 
@@ -39,20 +38,11 @@ var RealistApp = angular.module('realistApp', [
       };
       $scope.items.push(item);
       $scope.itemText = '';
-      console.log($scope.items);
       socket.emit('list changed', $scope.items);
     };
 
     $scope.toggleItem = function(index) {
       $scope.items[index]["is_checked"] = !($scope.items[index]["is_checked"]);
-      // console.log($scope.items[index]["is_checked"]);
-      // var item = {
-      //   "name" : $scope.itemText,
-      //   "is_checked" : false
-      // };
-      // $scope.items.push(item);
-      // $scope.itemText = '';
-      // // console.log(item);
       socket.emit('list changed', $scope.items);
     };    
 

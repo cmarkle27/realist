@@ -110,7 +110,13 @@ io.sockets.on('connection', function(socket) {
 
     console.log("\n ------------------------------------------------- \n list changed: ", data);
 
-    //db.List.update({_id: realist.list_id}, update, options, callback);
+    db.List.update({_id: realist.list_id}, {items: data}, { multi: true }, function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("list saved");
+      }
+    });
 
     // var item = new db.Grocery();
     // item.user = realist.list_id;
@@ -125,8 +131,8 @@ io.sockets.on('connection', function(socket) {
     //   }
     // });
 
-    // // tell everyone else about our change
-    // socket.broadcast.emit('item saved', data);
+    // tell everyone else about our change
+    socket.broadcast.emit('item saved', data);
 
   });
 
