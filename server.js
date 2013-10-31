@@ -4,6 +4,8 @@ var path = require('path');
 var pwd = require('pwd');
 var db = require('./lib/db');
 var fs = require('fs');
+
+// hmm.. list_id should be saved in a session var or sumpin
 var realist = {
   "index" : fs.readFileSync(__dirname + '/views/index.html', 'utf8'),
   "list_id" : null
@@ -38,7 +40,10 @@ function restrict(req, res, next) {
 
 var io = require('socket.io').listen(app.listen(process.env.PORT || 8080));
 
-// routes
+// ------------------------------------------------------------------------------
+// ROUTES
+// ------------------------------------------------------------------------------
+
 app.get('/login/:error?', function(req,res) {
 	res.render('login', {
       title: "Login",
@@ -61,82 +66,35 @@ app.post('/login/:error?', function(req, res) {
 
 // app.get('/list/:id', restrict, function(req,res) {
 app.get('/list/:id', function(req, res) {
-
   realist.list_id = req.params.id;
-
-  // console.log(req.session.user._id);
-
   res.set('Content-Type', 'text/html');
   res.send(realist.index);
-
 });
 
 app.get('/', function(req,res) {
-
     res.set('Content-Type', 'text/html');
     res.send(realist.index);
-
-  // try?
-  // db.Grocery.find(function(err, groceries) {
-  //   if (err) console.log(err);
-  //   res.render('index', {
-  //     title: "List",
-  //     groceries: groceries
-  //   });
-  // });
-
 });
 
-// sawkets
+// ------------------------------------------------------------------------------
+// SOCKETS
+// ------------------------------------------------------------------------------
 
-// this needs to only happen once
 io.sockets.on('connection', function(socket) {
 
-  console.log(realist.list_id);
-
-  // this should be list instead of user!!!
   db.List.findOne({_id: realist.list_id}, function(err, list) {
     if (err) console.log(err);
-    console.log(list);
     socket.emit('list loaded', list);
   });
-  
-  // socket.emit('message', { message: 'welcome to the chat' });
-  // socket.on('send', function (data) {
-  //     _ioServer.sockets.emit('message', data);
-  // });
 
   socket.on('list changed', function(data) {
 
-    console.log("\n ------------------------------------------------- \n list changed: ", data);
-
     db.List.update({_id: realist.list_id}, {items: data}, { multi: true }, function(err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("list saved");
-      }
+      if (err) console.log("list saved");
     });
 
-    // var item = new db.Grocery();
-    // item.user = realist.list_id;
-    // item.title = data.title;
-    // item.checked = data.checked;
-
-    // item.save(function(err) {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log("item saved");
-    //   }
-    // });
-
-    // tell everyone else about our change
-    socket.broadcast.emit('item saved', data);
+    socket.broadcast.emit('list saved', data);
 
   });
 
 });
-
-// start server
-// app.listen(process.env.PORT || 8080);

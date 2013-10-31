@@ -1,16 +1,10 @@
 'use strict';
 
-var RealistApp = angular.module('realistApp', [
+angular.module('realistApp', [
   'ui.bootstrap',
-  'realistApp.services',
+  'socket-io',
   'realistApp.controllers'
 ]);
-
-  // Realist.config(['$routeProvider', function($routeProvider) {
-  //   $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
-  //   $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
-  //   $routeProvider.otherwise({redirectTo: '/view1'});
-  // }]);
 
 /* Controllers */
 (function() {
@@ -18,18 +12,6 @@ var RealistApp = angular.module('realistApp', [
   RealistControllers.controller('ListController', function($scope, socket) {
 
     $scope.items = [];
-    $scope.user = '0'; // user should be group instead
-
-    socket.on("list loaded", function(list) {
-      $scope.items = list.items;
-    });
-
-    socket.on("item saved", function(item) {
-      $scope.items.push({
-        "name" : item.name,
-        "is_checked" : item.is_checked
-      });
-    });    
 
     $scope.addItem = function() {
       var item = {
@@ -42,40 +24,18 @@ var RealistApp = angular.module('realistApp', [
     };
 
     $scope.toggleItem = function(index) {
-      $scope.items[index]["is_checked"] = !($scope.items[index]["is_checked"]);
+      $scope.items[index].is_checked = !($scope.items[index].is_checked);
       socket.emit('list changed', $scope.items);
-    };    
-
-  });
-
-})();
-
-
-/* Services */
-(function() {
-  var RealistServices = angular.module('realistApp.services', []);
-  RealistServices.factory('socket', function($rootScope) {
-    var socket = io.connect();
-    return {
-      on: function(eventName, callback) {
-        socket.on(eventName, function() {
-          var args = arguments;
-          $rootScope.$apply(function() {
-            callback.apply(socket, args);
-          });
-        });
-      },
-      emit: function(eventName, data, callback) {
-        socket.emit(eventName, data, function() {
-          var args = arguments;
-          $rootScope.$apply(function() {
-            if (callback) {
-              callback.apply(socket, args);
-            }
-          });
-        });
-      }
     };
+
+    socket.on("list loaded", function(list) {
+      $scope.items = list.items;
+    });
+
+    socket.on("list saved", function(items) {
+      $scope.items = items;
+    });
+
   });
 
 })();
