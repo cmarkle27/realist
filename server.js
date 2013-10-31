@@ -1,11 +1,13 @@
 var express = require('express');
 var app = express();
-var io = require('socket.io');
 var path = require('path');
 var pwd = require('pwd');
 var db = require('./lib/db');
 var fs = require('fs');
-var _index = fs.readFileSync(__dirname + '/views/index.html', 'utf8');
+var realist = {
+  "index" : fs.readFileSync(__dirname + '/views/index.html', 'utf8'),
+  "list_id" : null
+}
 
 app.use(express.bodyParser());
 app.use(express.cookieParser());
@@ -34,7 +36,7 @@ function restrict(req, res, next) {
   }
 }
 
-var _ioServer = io.listen(app.listen(process.env.PORT || 8080));
+var io = require('socket.io').listen(app.listen(process.env.PORT || 8080));
 
 // routes
 app.get('/login/:error?', function(req,res) {
@@ -57,65 +59,22 @@ app.post('/login/:error?', function(req, res) {
   });
 });
 
-app.get('/list/:id', restrict, function(req,res) {
-// app.get('/list/:id', function(req, res) {
+// app.get('/list/:id', restrict, function(req,res) {
+app.get('/list/:id', function(req, res) {
 
-  var list_id = req.params.id;
+  realist.list_id = req.params.id;
 
   // console.log(req.session.user._id);
-  //console.log(list_id);
 
   res.set('Content-Type', 'text/html');
-  res.send(_index);
-
-  // sawkets
-  _ioServer.sockets.on('connection', function(socket) {
-
-    // this should be list instead of user!!!
-    db.Grocery.find({user: list_id}, function(err, groceries) {
-      if (err) console.log(err);
-      console.log(groceries);
-      socket.emit('items loaded', groceries);
-    });
-    
-    // socket.emit('message', { message: 'welcome to the chat' });
-    // socket.on('send', function (data) {
-    //     _ioServer.sockets.emit('message', data);
-    // });
-
-    socket.on('item added', function(data) {
-
-      console.log("\n ------------------------------------------------- \n item added: ", data);
-
-      var item = new db.Grocery();
-      item.user = list_id;
-      item.title = data.title;
-      item.checked = data.checked;
-
-      item.save(function(err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("item saved");
-        }
-      });
-
-      // tell everyone else about our change
-      socket.broadcast.emit('item saved', data);
-
-    });
-
-  });
-
-
-
+  res.send(realist.index);
 
 });
 
 app.get('/', function(req,res) {
 
     res.set('Content-Type', 'text/html');
-    res.send(_index);
+    res.send(realist.index);
 
   // try?
   // db.Grocery.find(function(err, groceries) {
@@ -125,6 +84,51 @@ app.get('/', function(req,res) {
   //     groceries: groceries
   //   });
   // });
+
+});
+
+// sawkets
+
+// this needs to only happen once
+io.sockets.on('connection', function(socket) {
+
+  console.log(realist.list_id);
+
+  // this should be list instead of user!!!
+  db.List.findOne({_id: realist.list_id}, function(err, list) {
+    if (err) console.log(err);
+    console.log(list);
+    socket.emit('list loaded', list);
+  });
+  
+  // socket.emit('message', { message: 'welcome to the chat' });
+  // socket.on('send', function (data) {
+  //     _ioServer.sockets.emit('message', data);
+  // });
+
+  socket.on('list changed', function(data) {
+
+    console.log("\n ------------------------------------------------- \n list changed: ", data);
+
+    //db.List.update({_id: realist.list_id}, update, options, callback);
+
+    // var item = new db.Grocery();
+    // item.user = realist.list_id;
+    // item.title = data.title;
+    // item.checked = data.checked;
+
+    // item.save(function(err) {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log("item saved");
+    //   }
+    // });
+
+    // // tell everyone else about our change
+    // socket.broadcast.emit('item saved', data);
+
+  });
 
 });
 

@@ -20,35 +20,41 @@ var RealistApp = angular.module('realistApp', [
     $scope.items = [];
     $scope.user = '0'; // user should be group instead
 
-    socket.on("items loaded", function(groceries) {
-      var items = [];
-      groceries.forEach(function(grocery) {
-        items.push({
-          "title" : grocery.title,
-          "checked" : grocery.checked
-        });
-      });
-      $scope.items = items;
+    socket.on("list loaded", function(list) {
+      $scope.items = list.items;
     });
 
     socket.on("item saved", function(grocery) {
       console.log("new item saved");
       $scope.items.push({
-        "title" : grocery.title,
-        "checked" : grocery.checked
+        "name" : grocery.name,
+        "is_checked" : grocery.is_checked
       });
     });    
 
     $scope.addItem = function() {
       var item = {
-        "title" : $scope.itemText,
-        "checked" : false
+        "name" : $scope.itemText,
+        "is_checked" : false
       };
       $scope.items.push(item);
       $scope.itemText = '';
-      console.log(item);
-      socket.emit('item added', item);
+      console.log($scope.items);
+      socket.emit('list changed', $scope.items);
     };
+
+    $scope.toggleItem = function(index) {
+      $scope.items[index]["is_checked"] = !($scope.items[index]["is_checked"]);
+      // console.log($scope.items[index]["is_checked"]);
+      // var item = {
+      //   "name" : $scope.itemText,
+      //   "is_checked" : false
+      // };
+      // $scope.items.push(item);
+      // $scope.itemText = '';
+      // // console.log(item);
+      socket.emit('list changed', $scope.items);
+    };    
 
   });
 
