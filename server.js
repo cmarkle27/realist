@@ -8,7 +8,7 @@ var fs = require('fs');
 // hmm.. list_id should be saved in a session var or sumpin
 var realist = {
   "index" : fs.readFileSync(__dirname + '/views/index.html', 'utf8'),
-  "list_id" : null
+  "list_id" : "5271d178b457fbba75000002"
 }
 
 app.use(express.bodyParser());
@@ -65,11 +65,17 @@ app.post('/login/:error?', function(req, res) {
 });
 
 // app.get('/list/:id', restrict, function(req,res) {
-app.get('/list/:id', function(req, res) {
-  realist.list_id = req.params.id;
-  res.set('Content-Type', 'text/html');
-  res.send(realist.index);
-});
+// app.get('/list/:id', function(req, res) {
+//   realist.list_id = req.params.id;
+//   res.set('Content-Type', 'text/html');
+//   res.send(realist.index);
+// });
+
+// app.post('/list/:id', function(req, res) {
+//   realist.list_id = req.params.id;
+//   res.set('Content-Type', 'text/html');
+//   res.send(realist.index);
+// });
 
 app.get('/', function(req,res) {
     res.set('Content-Type', 'text/html');
@@ -84,7 +90,7 @@ io.sockets.on('connection', function(socket) {
 
   db.List.findOne({_id: realist.list_id}, function(err, list) {
     if (err) console.log(err);
-    socket.emit('list loaded', list);
+    if (list) socket.emit('list loaded', list);
   });
 
   socket.on('list changed', function(data) {

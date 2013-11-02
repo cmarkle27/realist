@@ -8,25 +8,16 @@
     <link rel="stylesheet" type="text/css" href="/css/main.css">
     <script type="text/javascript" src="/bower/angular/angular.min.js"></script>
     <script type="text/javascript" src="/bower/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="/bower/angular-route/angular-route.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/js/ng-socket-io.js"></script>
     <script type="text/javascript" src="/js/realistApp.js"></script>
 </head>
 <body>
-  <div class="wrapper" ng-controller="ListController">
+  <!-- <div class="wrapper" ng-controller="ListController"> -->
+  <div class="wrapper">
 
-    <div class="addLine">
-      <form ng-submit="addItem()">
-        <input type="text" ng-model="itemText" placeholder="Type something..." id="itemText">
-        <input type="submit" class="btn" id="sendButton" value="Add">
-      </form>
-    </div>
-
-    <ul class="listTable">
-      <li ng-repeat="item in items">
-        {{item.name}} <input type="checkbox" ng-checked="item.is_checked" ng-click="toggleItem($index)">
-      </li>
-    </ul>
+    <ng-view>X</ng-view>
 
   </div>
 
