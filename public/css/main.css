@@ -5,12 +5,19 @@ body {
 }
 .wrapper {
   max-width: 480px;
+  margin: 0 auto;
 }
 
 .addLine {
   position: relative;
   padding-right: 16px;
+  margin: 20px 0 10px 0;
 }
+
+.addLine form {
+  margin: 0;
+}
+
 #itemText {
   height: auto;
   margin: 0;
@@ -46,4 +53,9 @@ ul.listTable li input {
   position: absolute;
   top: 0px;
   right: 12px;
+}
+
+.removeControls {
+  margin: 10px 0;
+  text-align: right;
 }

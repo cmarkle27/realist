@@ -1,9 +1,9 @@
 var express = require('express');
-var app = express();
 var path = require('path');
 var pwd = require('pwd');
-var db = require('./lib/db');
 var fs = require('fs');
+var db = require('./lib/db');
+var app = express();
 
 // hmm.. list_id should be saved in a session var or sumpin
 var realist = {
@@ -15,6 +15,8 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: 'KJDNJ24SJFHDK433'}));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// we should just do the login on the same page and get rid of ejs
 app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 
@@ -44,25 +46,25 @@ var io = require('socket.io').listen(app.listen(process.env.PORT || 8080));
 // ROUTES
 // ------------------------------------------------------------------------------
 
-app.get('/login/:error?', function(req,res) {
-	res.render('login', {
-      title: "Login",
-      hasError: req.params.error
-	});
-});
+// app.get('/login/:error?', function(req,res) {
+// 	res.render('login', {
+//       title: "Login",
+//       hasError: req.params.error
+// 	});
+// });
 
-app.post('/login/:error?', function(req, res) {
-  authenticate(req.body.username, req.body.password, function(err, user){
-    if (user) {
-      req.session.regenerate(function(){
-        req.session.user = user;
-        res.redirect('/');
-      });
-    } else {
-      res.redirect('/login/error');
-    }
-  });
-});
+// app.post('/login/:error?', function(req, res) {
+//   authenticate(req.body.username, req.body.password, function(err, user){
+//     if (user) {
+//       req.session.regenerate(function(){
+//         req.session.user = user;
+//         res.redirect('/');
+//       });
+//     } else {
+//       res.redirect('/login/error');
+//     }
+//   });
+// });
 
 // app.get('/list/:id', restrict, function(req,res) {
 // app.get('/list/:id', function(req, res) {
@@ -80,6 +82,11 @@ app.post('/login/:error?', function(req, res) {
 app.get('/', function(req,res) {
     res.set('Content-Type', 'text/html');
     res.send(realist.index);
+});
+
+app.get('/foos', function(req,res) {
+    res.set('Content-Type', 'text/html');
+    res.send("<b>PATRY</b>");
 });
 
 // ------------------------------------------------------------------------------

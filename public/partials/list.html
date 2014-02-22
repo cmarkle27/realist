@@ -10,3 +10,10 @@
     {{item.name}} <input type="checkbox" ng-checked="item.is_checked" ng-click="toggleItem($index)">
   </li>
 </ul>
+
+<div class="removeControls">
+  <button class="btn" ng-click="clearChecked()">Clear Checked</button>
+  <button class="btn" ng-click="clearAll()">Clear All</button>
+</div>
+
+<!-- <span style="color:white">Thinking...</span> -->

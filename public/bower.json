@@ -13,6 +13,10 @@
   ],
   "dependencies": {
     "angular-bootstrap": "~0.6.0",
-    "angular-route": "~1.2.0-rc.3"
+    "angular-route": "~1.2.0-rc.3",
+    "angular-cookies": "~1.2.13"
+  },
+  "resolutions": {
+    "angular": "1.2.0-rc.3"
   }
 }
