@@ -1,81 +1,92 @@
-'use strict';
+// ------------------------------------------------------------------------------
+/* App */
+// ------------------------------------------------------------------------------
 
-/* Config */
-var RealistApp = angular.module('realistApp', [
-  'ngRoute',
-  // 'ngCookies',
-  'ngCookies',
-  'ui.bootstrap',
-  'socket-io',
-  'realistApp.controllers'
-]);
-
-/* Routes */
-RealistApp.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/', {templateUrl: 'partials/list.html', controller: 'ListController'});
-  $routeProvider.otherwise({redirectTo: '/'});
-}]);
-
-/* Serivce */
-RealistApp.factory('myService', function($http) {
-   return {
-        getFoos: function() {
-             //return the promise directly.
-             return $http.get('/foos')
-                       .then(function(result) {
-                            //resolve the promise as the data
-                            return result.data;
-                        });
-        }
-   }
-});
-
-RealistApp.factory('validateCookie', function($cookieStore, $http){
-    return function(scope) {
-        // Validate the cookie here...
-        console.log("sbbasd");
-    }
-})
-
-RealistApp.run(function($rootScope, validateCookie) {
-    $rootScope.$on('$routeChangeSuccess', function () {
-        validateCookie($rootScope);
-    })
-})
-
-//////////////////////////////////////////
-
-var myList = {
-  items: [],
-  addItem: function($scope) {
-      var item = {
-        "name" : $scope.itemText,
-        "is_checked" : false
-      };
-      this.items.push(item);
-      $scope.itemText = '';
-      socket.emit('list changed', $scope.items);
-    }
-}
-
-
-
-
-//////////////////////////////////////////
-
-/* Controllers */
 ;(function() {
 
   'use strict';
 
-  angular.module('realistApp.controllers', []).controller('ListController', function($scope, socket, myService) {
+  var RealistApp = angular.module('realistApp', [
+    'ngRoute',
+    'ngCookies',
+    'ui.bootstrap',
+    'socket-io',
+    'realistApp.controllers'
+  ]);
 
-    // check login first
-    $scope.foos = myService.getFoos().then(function(foos) {
-        // $scope.foos = foos;
-        console.log("durn", foos);
-    });
+  /* Routes */
+  RealistApp.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.when('/', {templateUrl: 'partials/list.html', controller: 'ListController'});
+    $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
+    $routeProvider.otherwise({redirectTo: '/'});
+  }]);
 
+  /* Serivce */
+  // RealistApp.factory('myService', function($http) {
+  //    return {
+  //         getFoos: function() {
+  //              //return the promise directly.
+  //              return $http.get('/foos')
+  //                        .then(function(result) {
+  //                             //resolve the promise as the data
+  //                             return result.data;
+  //                         });
+  //         }
+  //    }
+  // });
+
+  RealistApp.factory('Auth', function($cookieStore, $http) {
+
+    var user;
+
+    return {
+        setUser : function(aUser) {
+            user = aUser;
+        },
+        isLoggedIn : function(){
+            return (user) ? user : false;
+        }
+    }
+  })
+
+  RealistApp.run(function($rootScope, $location, Auth) {
+      $rootScope.$on('$routeChangeSuccess', function() {
+          // validateCookie($rootScope);
+          if (!Auth.isLoggedIn()) {
+              console.log('DENY');
+              // event.preventDefault();
+              $location.path('/login');
+          }
+          else {
+              console.log('ALLOW');
+              $location.path('/');
+          }
+
+      })
+  });
+
+})();
+
+// ------------------------------------------------------------------------------
+/* Controllers */
+// ------------------------------------------------------------------------------
+
+;(function() {
+
+  'use strict';
+
+  var RealistControllers = angular.module('realistApp.controllers', []);
+
+  // angular.module('realistApp.controllers', [])
+  RealistControllers.controller('LoginController', function($scope) {
+    console.log("logggy");
+    // $scope.foos = myService.getFoos().then(function(foos) {
+    //     // $scope.foos = foos;
+    //     console.log("durn", foos);
+    // });
+  });
+
+  RealistControllers.controller('ListController', function($scope, socket) {
 
     $scope.items = [];
 
