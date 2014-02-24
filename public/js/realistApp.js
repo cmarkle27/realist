@@ -2,6 +2,22 @@
 /* App */
 // ------------------------------------------------------------------------------
 
+// var ModalInstanceCtrl = function($scope, $modalInstance, email) {
+
+//   $scope.thing = email;
+//   $scope.email = email;
+
+//   $scope.login = function() {
+//     // console.log(email);
+//     $scope.thing = $scope.email;
+//     $modalInstance.close($scope.thing, $scope.email);
+//   };
+
+//   $scope.cancel = function() {
+//     $modalInstance.dismiss('cancel');
+//   };
+// }; 
+
 ;(function() {
 
   'use strict';
@@ -17,7 +33,7 @@
   /* Routes */
   RealistApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {templateUrl: 'partials/list.html', controller: 'ListController'});
-    $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
+    // $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
     $routeProvider.otherwise({redirectTo: '/'});
   }]);
 
@@ -43,26 +59,55 @@
         setUser : function(aUser) {
             user = aUser;
         },
-        isLoggedIn : function(){
+        isLoggedIn : function() {
             return (user) ? user : false;
         }
     }
   })
 
-  RealistApp.run(function($rootScope, $location, Auth) {
-      $rootScope.$on('$routeChangeSuccess', function() {
-          // validateCookie($rootScope);
-          if (!Auth.isLoggedIn()) {
-              console.log('DENY');
-              // event.preventDefault();
-              $location.path('/login');
-          }
-          else {
-              console.log('ALLOW');
-              $location.path('/');
-          }
+  RealistApp.run(function($rootScope, $modal, $log, Auth, socket) { // $location
+    $rootScope.$on('$routeChangeSuccess', function() {
 
-      })
+      $rootScope.user = {
+        email: 'name',
+        password: null
+      };
+
+      if (!Auth.isLoggedIn()) {
+        console.log('DENY');
+        // event.preventDefault();
+        // $location.path('/login');
+
+        var modalInstance = $modal.open({
+          templateUrl: 'partials/myModel.html',
+          keyboard: false,
+          backdrop: 'static',
+          controller: function ($rootScope, $modalInstance, $log, user) {
+            $rootScope.user = user;
+            $rootScope.submit = function () {
+              $log.log('Submiting user info.');
+              Auth.setUser(user);
+              $modalInstance.dismiss('cancel');
+              socket.emit('ready');
+            }
+            $rootScope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+          },
+          resolve: {
+            user: function () {
+              return $rootScope.user;
+            }
+          }             
+        });
+      } else {
+        console.log('ALLOW');
+        // $location.path('/');
+      }
+
+
+
+    })
   });
 
 })();
@@ -78,15 +123,81 @@
   var RealistControllers = angular.module('realistApp.controllers', []);
 
   // angular.module('realistApp.controllers', [])
-  RealistControllers.controller('LoginController', function($scope) {
-    console.log("logggy");
+  // RealistControllers.controller('LoginController', function($scope) {
+  //   console.log("logggy");
     // $scope.foos = myService.getFoos().then(function(foos) {
     //     // $scope.foos = foos;
     //     console.log("durn", foos);
     // });
-  });
+
+    // $scope.lastVal = $cookieStore.get('tab');
+
+    // $scope.changeTab = function(tabName){
+    //     $scope.lastVal = tabName;
+    //     $cookieStore.put('tab', tabName);
+    // };
+
+
+  // });
+
+
+  // RealistControllers.controller('ModalInstanceCtrl', function($scope, $modalInstance) {
+// var ModalInstanceCtrl = function ($scope, $modalInstance) {
+
+//     // $scope.items = items;
+//     // $scope.selected = {
+//     //   item: $scope.items[0]
+//     // };
+
+//     $scope.ok = function () {
+//       // $modalInstance.close($scope.selected.item);
+//     };
+
+//     $scope.cancel = function () {
+//       $modalInstance.dismiss('cancel');
+//     };
+//   };  
 
   RealistControllers.controller('ListController', function($scope, socket) {
+
+    // $scope.user = {
+    //   email: 'name',
+    //   password: null
+    // };
+
+    // if (!Auth.isLoggedIn()) {
+    //   console.log('DENY');
+    //   // event.preventDefault();
+    //   // $location.path('/login');
+
+    //   var modalInstance = $modal.open({
+    //     templateUrl: 'partials/myModel.html',
+    //     keyboard: false,
+    //     backdrop: 'static',
+    //     controller: function ($scope, $modalInstance, $log, user) {
+    //       $scope.user = user;
+    //       $scope.submit = function () {
+    //         $log.log('Submiting user info.');
+    //         $log.log(user);
+    //         $modalInstance.dismiss('cancel');
+    //       }
+    //       $scope.cancel = function () {
+    //           $modalInstance.dismiss('cancel');
+    //       };
+    //     },
+    //     resolve: {
+    //       user: function () {
+    //         return $scope.user;
+    //       }
+    //     }             
+    //   });
+    // } else {
+    //   console.log('ALLOW');
+    //   // $location.path('/');
+    // }
+
+
+
 
     $scope.items = [];
 

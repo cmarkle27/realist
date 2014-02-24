@@ -1,9 +1,9 @@
-      <div class="loginForm">
-      <form>
-        <label for="username">Username:</label>
-        <input type="text" name="username">
-        <label for="password">Password:</label>
-        <input type="password" name="password">
-        <button type="submit" class="btn">Login</button>
-      </form>
-      </div>
+<div class="loginForm">
+  <form ng-submit="addItem()">
+  <label for="username">Email:</label>
+    <input type="text" ng-model="itemText" class="input-xlarge" placeholder="you@email.com">
+    <label for="password">Password:</label>
+    <input type="password" name="password" class="input-xlarge">
+    <input type="submit" class="btn" id="loginButton" value="Login">
+  </form>
+</div>

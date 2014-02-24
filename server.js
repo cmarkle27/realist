@@ -95,18 +95,22 @@ app.get('/foos', function(req,res) {
 
 io.sockets.on('connection', function(socket) {
 
-  db.List.findOne({_id: realist.list_id}, function(err, list) {
-    if (err) console.log(err);
-    if (list) socket.emit('list loaded', list);
-  });
-
-  socket.on('list changed', function(data) {
-
-    db.List.update({_id: realist.list_id}, {items: data}, { multi: true }, function(err) {
-      if (err) console.log("list saved");
+  socket.on('ready', function() {
+    
+    db.List.findOne({_id: realist.list_id}, function(err, list) {
+      if (err) console.log(err);
+      if (list) socket.emit('list loaded', list);
     });
 
-    socket.broadcast.emit('list saved', data);
+    socket.on('list changed', function(data) {
+
+      db.List.update({_id: realist.list_id}, {items: data}, { multi: true }, function(err) {
+        if (err) console.log("list saved");
+      });
+
+      socket.broadcast.emit('list saved', data);
+
+    });
 
   });
 
