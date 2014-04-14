@@ -65,50 +65,50 @@
     }
   })
 
-  RealistApp.run(function($rootScope, $modal, $log, Auth, socket) { // $location
-    $rootScope.$on('$routeChangeSuccess', function() {
+  // RealistApp.run(function($rootScope, $modal, $log, Auth, socket) { // $location
+  //   $rootScope.$on('$routeChangeSuccess', function() {
 
-      $rootScope.user = {
-        email: 'name',
-        password: null
-      };
+  //     $rootScope.user = {
+  //       email: 'name',
+  //       password: null
+  //     };
 
-      if (!Auth.isLoggedIn()) {
-        console.log('DENY');
-        // event.preventDefault();
-        // $location.path('/login');
+  //     if (!Auth.isLoggedIn()) {
+  //       console.log('DENY');
+  //       // event.preventDefault();
+  //       // $location.path('/login');
 
-        var modalInstance = $modal.open({
-          templateUrl: 'partials/myModel.html',
-          keyboard: false,
-          backdrop: 'static',
-          controller: function ($rootScope, $modalInstance, $log, user) {
-            $rootScope.user = user;
-            $rootScope.submit = function () {
-              $log.log('Submiting user info.');
-              Auth.setUser(user);
-              $modalInstance.dismiss('cancel');
-              socket.emit('ready');
-            }
-            $rootScope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
-          },
-          resolve: {
-            user: function () {
-              return $rootScope.user;
-            }
-          }             
-        });
-      } else {
-        console.log('ALLOW');
-        // $location.path('/');
-      }
+  //       var modalInstance = $modal.open({
+  //         templateUrl: 'partials/myModel.html',
+  //         keyboard: false,
+  //         backdrop: 'static',
+  //         controller: function ($rootScope, $modalInstance, $log, user) {
+  //           $rootScope.user = user;
+  //           $rootScope.submit = function () {
+  //             $log.log('Submiting user info.');
+  //             Auth.setUser(user);
+  //             $modalInstance.dismiss('cancel');
+  //             socket.emit('ready');
+  //           }
+  //           $rootScope.cancel = function () {
+  //               $modalInstance.dismiss('cancel');
+  //           };
+  //         },
+  //         resolve: {
+  //           user: function () {
+  //             return $rootScope.user;
+  //           }
+  //         }             
+  //       });
+  //     } else {
+  //       console.log('ALLOW');
+  //       // $location.path('/');
+  //     }
 
 
 
-    })
-  });
+  //   })
+  // });
 
 })();
 

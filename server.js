@@ -95,7 +95,7 @@ app.get('/foos', function(req,res) {
 
 io.sockets.on('connection', function(socket) {
 
-  socket.on('ready', function() {
+  //socket.on('ready', function() {
     
     db.List.findOne({_id: realist.list_id}, function(err, list) {
       if (err) console.log(err);
@@ -112,6 +112,6 @@ io.sockets.on('connection', function(socket) {
 
     });
 
-  });
+  // });
 
 });
