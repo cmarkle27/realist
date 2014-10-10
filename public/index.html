@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="realistApp">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Realist</title>
+	<link rel="stylesheet" type="text/css" href="/bower/bootstrap-css/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Realist</h1>
+		<ng-view></ng-view>
+	</div>
+	<script src="/bower/angular/angular.min.js"></script>
+	<script src="/bower/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script src="/bower/angular-route/angular-route.min.js"></script>
+	<script src="/bower/angular-cookies/angular-cookies.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/ng-socket-io.js"></script>
+	<script src="/js/realistApp.js"></script>
+</body>
+
+</html>

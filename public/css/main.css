@@ -30,14 +30,13 @@ body {
 }
 
 ul.listTable {
-  background: #fff;
-  border-radius: 4px;
   list-style-type: none;
   margin: 0;
   width: 100%;
 }
 
 ul.listTable li {
+  background: #fff;
   border-top: solid 1px #ddd;
   line-height: 2.3;
   padding: 0 10px;
@@ -46,6 +45,11 @@ ul.listTable li {
 
 ul.listTable li:first-child {
   border-top: none;
+  border-radius: 4px 4px 0 0;
+}
+
+ul.listTable li:last-child {
+  border-radius: 0 0 4px 4px;
 }
 
 ul.listTable li input {
